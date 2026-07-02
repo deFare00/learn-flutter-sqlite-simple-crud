@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../database/database_helper.dart';
-import '../models/student.dart';
+import '../../../database/database_helper.dart';
+import '../models/student_model.dart';
 import '../widgets/student_card.dart';
-import 'add_student_page.dart';
-import 'edit_student_page.dart';
+import 'add_student_screen.dart';
+import 'edit_student_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

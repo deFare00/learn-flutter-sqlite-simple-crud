@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 
-import '../database/database_helper.dart';
-import '../models/student.dart';
+import '../../../database/database_helper.dart';
+import '../models/student_model.dart';
 
-class AddStudentPage extends StatefulWidget {
-  const AddStudentPage({super.key});
+class EditStudentPage extends StatefulWidget {
+  final Student student;
+
+  const EditStudentPage({super.key, required this.student});
 
   @override
-  State<AddStudentPage> createState() => _AddStudentPageState();
+  State<EditStudentPage> createState() => _EditStudentPageState();
 }
 
-class _AddStudentPageState extends State<AddStudentPage> {
+class _EditStudentPageState extends State<EditStudentPage> {
   final _formKey = GlobalKey<FormState>();
 
   final _nameController = TextEditingController();
 
   final _ageController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _nameController.text = widget.student.name;
+
+    _ageController.text = widget.student.age.toString();
+  }
 
   @override
   void dispose() {
@@ -25,23 +36,24 @@ class _AddStudentPageState extends State<AddStudentPage> {
     super.dispose();
   }
 
-  Future<void> _saveStudent() async {
+  Future<void> _updateStudent() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
     Student student = Student(
+      id: widget.student.id,
       name: _nameController.text,
       age: int.parse(_ageController.text),
     );
 
-    await DatabaseHelper.instance.insertStudent(student);
+    await DatabaseHelper.instance.updateStudent(student);
 
     if (!mounted) return;
 
     ScaffoldMessenger.of(
       context,
-    ).showSnackBar(const SnackBar(content: Text("Student added successfully")));
+    ).showSnackBar(const SnackBar(content: Text("Student Updated")));
 
     Navigator.pop(context);
   }
@@ -49,7 +61,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Student")),
+      appBar: AppBar(title: const Text("Edit Student")),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -94,8 +106,8 @@ class _AddStudentPageState extends State<AddStudentPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _saveStudent,
-                  child: const Text("Save"),
+                  onPressed: _updateStudent,
+                  child: const Text("Update"),
                 ),
               ),
             ],
